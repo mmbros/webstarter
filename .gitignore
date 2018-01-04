@@ -1,5 +1,6 @@
 # MMBROS
-build
+dist
+tmp
 
 # Logs
 logs

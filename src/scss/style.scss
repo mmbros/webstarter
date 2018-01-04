@@ -1,7 +1,10 @@
+@import 'normalize';
 
+$body-bg: #ccc;
 $body-color: #222;
 
-
 body {
-	color: $body-color;
+  background-color: $body-bg;
+  color: $body-color;
+  font: 100% Helvetica, sans-serif;
 }
