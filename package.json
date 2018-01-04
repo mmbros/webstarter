@@ -15,10 +15,12 @@
     "sass"
   ],
   "author": "mmbros",
+  "repository": "github:mmbros/webstarter",
   "license": "ISC",
   "devDependencies": {
     "browser-sync": "^2.23.2",
     "gulp": "^3.9.1",
-    "gulp-sass": "^3.1.0"
+    "gulp-sass": "^3.1.0",
+    "normalize.css": "^7.0.0"
   }
 }
