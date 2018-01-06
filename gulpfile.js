@@ -5,57 +5,81 @@ const browserSync = require('browser-sync').create();
 const sass        = require('gulp-sass');
 const rename      = require('gulp-rename');
 
-var
-  src = 'src/',
-  dest = 'dist/',
-  tmp = 'tmp/';
-
+// **** DIRECTORIES ****
+var dirs = {
+  src: './src/',
+  dest: './dist/',
+  tmp: '/tmp/webstarter'
+};
 
 var scss = {
-  src: src + 'scss/style.scss',
-  dest: dest + 'css/',
-  sassOpts: {
-    includePaths: [tmp],
-    outputStyle: 'compressed'
+  src: dirs.src + 'scss/style.scss',
+  dest: dirs.dest + 'css/',
+  watch: dirs.src + 'scss/**/*.scss',
+  opts: {
+    includePaths: [dirs.tmp], // to include normalize.css
+    outputStyle: 'normal'
   }
 }
 
-gulp.task('normalize', function() {
+var html = {
+  src: dirs.src + '**/*.html',
+  dest: dirs.dest
+}
+
+var img = {
+  src: dirs.src + 'img/*.{png,jpg,gif}',
+  dest: dirs.dest + 'img/'
+}
+
+// **** TASKS ****
+
+// Copy images
+gulp.task('copy:img', function() {
+  return gulp.src(img.src)
+    .pipe(gulp.dest(img.dest));
+//    .pipe(browserSync.stream());
+});
+
+// Rename normalize.css in order to get included in style.scss
+// The renamed file will be saved in dirs.tmp folder
+gulp.task('copy:normalize', function() {
   return gulp.src('./node_modules/normalize.css/normalize.css')
     .pipe(rename('_normalize.scss'))
-    .pipe(gulp.dest(tmp));
+    .pipe(gulp.dest(dirs.tmp));
 });
 
 // Compile Sass & Inject Into Browser
-gulp.task('sass', ['normalize'], function() {
+gulp.task('sass', function() {
   return gulp.src(scss.src)
-    .pipe(sass(scss.sassOpts))
+    .pipe(sass(scss.opts))
     .pipe(gulp.dest(scss.dest))
     .pipe(browserSync.stream());
 });
 
-// copy:html
+// Copy html filed in dest folder
 gulp.task('copy:html', function() {
-
-  return gulp.src(['src/**/*.html'])
-    .pipe(gulp.dest("dist/"))
+  return gulp.src(html.src)
+    .pipe(gulp.dest(html.dest))
     .pipe(browserSync.stream());
 });
 
-// copy
+// All copy tasks
 gulp.task('copy', [
-  'copy:html'
+  'copy:img',
+  'copy:html',
+  'copy:normalize'
 ]);
 
 // Watch Sass & Serve
 gulp.task('serve', ['copy', 'sass'], function() {
 
-    browserSync.init({
-        server: "./dist"
-    });
+  browserSync.init({
+    server: dirs.dest
+  });
 
-    gulp.watch(['src/scss/*.scss'], ['sass']);
-    gulp.watch(['src/**/*.html'], ['copy:html']);
+  gulp.watch(scss.watch, ['sass']);
+  gulp.watch(['src/**/*.html'], ['copy:html']);
 });
 
 

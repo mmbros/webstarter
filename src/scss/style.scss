@@ -1,10 +1,13 @@
 @import 'normalize';
-
-$body-bg: #ccc;
-$body-color: #222;
+@import 'theme';
+@import 'panel';
 
 body {
   background-color: $body-bg;
   color: $body-color;
   font: 100% Helvetica, sans-serif;
+
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px;
 }
